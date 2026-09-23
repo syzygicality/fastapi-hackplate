@@ -9,7 +9,8 @@ class RedisSettings(BaseSettings):
     """
     Loads Redis connection settings from the environment (REDIS_* variables).
 
-    Provide either REDIS_URL or the individual connection fields below.
+    Set REDIS_ENABLED=true to turn Redis on. Provide either REDIS_URL or the
+    individual connection fields below.
     """
 
     model_config = SettingsConfigDict(
@@ -19,13 +20,15 @@ class RedisSettings(BaseSettings):
         env_ignore_empty=True,
     )
 
+    enabled: bool = False
+
     url: str | None = None
 
     host: str = "localhost"
     port: int = 6379
     db: int = 0
-    username: str
-    password: str
+    username: str | None = None
+    password: str | None = None
     ssl_required: bool = False
 
     @property
@@ -54,3 +57,9 @@ class RedisSettings(BaseSettings):
             return False
         finally:
             await client.close()
+
+
+def get_redis_settings() -> RedisSettings | None:
+    """Returns the Redis settings when REDIS_ENABLED is true, otherwise None."""
+    redis = RedisSettings()
+    return redis if redis.enabled else None

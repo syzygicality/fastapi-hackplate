@@ -55,9 +55,6 @@ auth_user_model = "app.hackplate.user.models.UserDocument"
 # Set to true to enable MCP boilerplate.
 mcp_server_enabled = false
 
-# Set to true to load Redis settings (REDIS_* env vars) onto the backend config.
-redis_enabled = false
-
 [tool.hackplate.db]
 # Set to true to manage schema with Alembic migrations.
 # When false, SQLModel creates tables automatically on startup (not recommended for production).

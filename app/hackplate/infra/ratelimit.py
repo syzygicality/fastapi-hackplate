@@ -6,7 +6,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
 from app.hackplate.hackplate_types import Hackplate
-from app.hackplate.infra.redis import RedisSettings
+from app.hackplate.infra.redis import get_redis_settings
 from app.hackplate.toml_settings import BackendTOMLSettings
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ def _build_limiter() -> tuple[Limiter, bool]:
     Returns the limiter and whether the Redis backend is in use (for logging).
     """
     settings = BackendTOMLSettings()
-    redis = RedisSettings() if settings.project.redis_enabled else None
+    redis = get_redis_settings()
     rl = settings.ratelimit
 
     storage_uri = redis.connection_url if redis is not None else "memory://"

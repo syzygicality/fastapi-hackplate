@@ -36,7 +36,6 @@ class ProjectDetails(BaseTOMLSettings):
 class GeneralSettings(BaseTOMLSettings):
     auth_user_model: str = "app.hackplate.user.models.User"
     mcp_server_enabled: bool = False
-    redis_enabled: bool = False
 
 
 class DatabaseSettings(BaseTOMLSettings):

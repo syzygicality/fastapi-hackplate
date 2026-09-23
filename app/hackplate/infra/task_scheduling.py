@@ -3,7 +3,7 @@ import logging
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from app.hackplate.infra.redis import RedisSettings
+from app.hackplate.infra.redis import get_redis_settings
 from app.hackplate.toml_settings import BackendTOMLSettings
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ def _build_scheduler() -> tuple[AsyncIOScheduler, bool]:
     Returns the scheduler and whether the Redis job store is in use (for logging).
     """
     settings = BackendTOMLSettings()
-    redis = RedisSettings() if settings.project.redis_enabled else None
+    redis = get_redis_settings()
 
     if redis is not None:
         from apscheduler.jobstores.redis import RedisJobStore

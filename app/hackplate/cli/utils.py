@@ -161,7 +161,6 @@ def run_checks() -> bool:
     from app.hackplate.config import BackendEnvSettings
     from app.hackplate.cors import CORSSettings
     from app.hackplate.infra.redis import RedisSettings
-    from app.hackplate.toml_settings import GeneralSettings
     from app.hackplate.plates.db_plates.sqlite.config import SQLiteSettings
     from app.hackplate.plates.db_plates.postgres.config import PostgresSettings
     from app.hackplate.plates.db_plates.postgres.supabase_config import SupabaseSettings
@@ -188,8 +187,7 @@ def run_checks() -> bool:
     all_valid = assert_settings(CORSSettings)
     all_valid &= assert_settings(settings_map[backend_settings.db])
     all_valid &= assert_settings(settings_map[backend_settings.auth])
-    if GeneralSettings().redis_enabled:
-        all_valid &= assert_settings(RedisSettings)
+    all_valid &= assert_settings(RedisSettings)
     return all_valid
 
 
