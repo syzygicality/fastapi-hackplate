@@ -2,6 +2,7 @@ import shutil
 from pathlib import Path
 
 import typer
+from dotenv import get_key
 
 from app.hackplate.cli.utils import ROOT_DIR
 
@@ -9,7 +10,9 @@ app = typer.Typer()
 
 BASE_FILES = ["routes.py", "schemas.py", "crud.py", "models.py", "__init__.py"]
 
-MODELS_STUB = "from app.hackplate.plates.db_plates.mongo.registry import register_document  # noqa: F401\n"
+SQL_MODELS_STUB = "from sqlmodel import SQLModel, Field  # noqa: F401\n"
+
+MONGO_MODELS_STUB = "from app.hackplate.plates.db_plates.mongo.registry import register_document  # noqa: F401\n"
 
 TOOLS_STUB = """from app.hackplate.mcp import get_mcp
 
@@ -26,6 +29,12 @@ REGISTRIES = {
     "models": "register_models.py",
     "tools": "register_tools.py",
 }
+
+
+def _models_stub() -> str:
+    """Pick the models.py stub matching the active db plate (defaults to sqlite)."""
+    db = get_key(Path(ROOT_DIR) / ".env", "HACKPLATE_DB") or "sqlite"
+    return MONGO_MODELS_STUB if db == "mongo" else SQL_MODELS_STUB
 
 
 def _registry_path(kind: str) -> Path:
@@ -79,7 +88,7 @@ def startfeature(
 
     for filename in BASE_FILES:
         (feature_dir / filename).touch()
-    (feature_dir / "models.py").write_text(MODELS_STUB)
+    (feature_dir / "models.py").write_text(_models_stub())
     _register(feature_name, "models")
 
     if with_tools:
