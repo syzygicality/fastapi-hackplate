@@ -84,7 +84,7 @@
             "Review mode is read-only — report changes instead of applying them",
             "Use `hackplate setmode safe|fast` (outside this session) to regain write access",
             "Use `hackplate getplates` to see the active auth and db plates",
-            "Read app/hackplate/ to understand framework internals before critiquing app/ code"
+            "Read app/platform/ to understand framework internals before critiquing app/ code"
         ]
     },
     "attribution": {

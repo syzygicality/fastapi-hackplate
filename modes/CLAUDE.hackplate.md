@@ -5,7 +5,7 @@ edit `CLAUDE.md` for project-specific instructions, not this file.
 
 ## Project Overview
 
-FastAPI hackathon template for rapid prototyping. The core framework lives in `app/hackplate/` and is not meant to be edited — user code lives in `app/` alongside it. The framework is configured through two mechanisms: `.env` (selects which plates to activate) and `pyproject.toml` `[tool.hackplate]` tables (fine-grained options like alembic toggle, custom user model).
+FastAPI hackathon template for rapid prototyping. The core framework lives in `app/platform/` and is not meant to be edited — user code lives in `app/` alongside it. The framework is configured through two mechanisms: `.env` (selects which plates to activate) and `pyproject.toml` `[tool.hackplate]` tables (fine-grained options like alembic toggle, custom user model).
 
 ## Setup
 
@@ -57,8 +57,8 @@ app/
 ├── main.py              ← register routers here
 ├── lifespan.py          ← pre/post startup hooks (user-editable)
 ├── dependencies.py      ← get_db and get_current_user wrappers (user-editable)
-│                          for WebSocket handlers use get_db_from_ws from hackplate/websocket.py
-└── hackplate/           ← framework internals — do not modify unless necessary
+│                          for WebSocket handlers use get_db_from_ws from platform/websocket.py
+└── platform/            ← framework internals — do not modify unless necessary
     ├── cli.py
     ├── config.py        ← loads plates from .env, validates choices
     ├── hackplate_types.py ← Hackplate (FastAPI subclass), HackplateRequest, HackplateWebSocket
@@ -93,7 +93,7 @@ Switch plates with `hackplate setplate auth <name>` or `hackplate setplate db <n
 
 ### Keycloak
 
-Keycloak is **not** part of `docker-compose.yml` — it runs as its own compose project (`app/hackplate/plates/auth_plates/keycloak/docker-compose.keycloak.yml`, project name `hackplate-keycloak`), started with `hackplate keycloak up`.
+Keycloak is **not** part of `docker-compose.yml` — it runs as its own compose project (`app/platform/plates/auth_plates/keycloak/docker-compose.keycloak.yml`, project name `hackplate-keycloak`), started with `hackplate keycloak up`.
 
 `KEYCLOAK_URL` is the single URL used by the browser, the app and the CLI alike, so it has to resolve identically from the host and from inside the api container. One-time host setup for the local stack:
 
@@ -113,13 +113,13 @@ Defined in `pyproject.toml`:
 
 ```toml
 [tool.hackplate]
-auth_user_model = "app.hackplate.user.models.User"
+auth_user_model = "app.platform.user.models.User"
 ```
 
 - SQL plates: model must inherit from `AbstractUser` (SQLModel)
 - Mongo plate: model must inherit from `AbstractUserDocument` (Beanie Document)
 
-The default `User` model lives at `app/hackplate/user/models.py`. To customize, create your own model class in `app/`, update `auth_user_model` in `pyproject.toml`, and register it in `migrations/register_models.py`.
+The default `User` model lives at `app/platform/user/models.py`. To customize, create your own model class in `app/`, update `auth_user_model` in `pyproject.toml`, and register it in `migrations/register_models.py`.
 
 ## Adding Features
 

@@ -25,7 +25,7 @@ target_metadata = SQLModel.metadata
 def get_url() -> str:
     db = os.getenv("HACKPLATE_DB", "sqlite")
     if db == "supabase":
-        from app.hackplate.plates.db_plates.postgres.supabase_config import (
+        from app.platform.plates.db_plates.postgres.supabase_config import (
             SupabaseSettings,
         )
 
@@ -35,7 +35,7 @@ def get_url() -> str:
         base = f"postgresql+asyncpg://{sb.username}:{sb.password}@{sb.host}:{sb.port}/{sb.name}"
         return f"{base}?ssl=require" if sb.ssl_required else base
     if db == "postgres":
-        from app.hackplate.plates.db_plates.postgres.config import PostgresSettings
+        from app.platform.plates.db_plates.postgres.config import PostgresSettings
 
         pg = PostgresSettings()
         if pg.url:
@@ -43,7 +43,7 @@ def get_url() -> str:
         base = f"postgresql+asyncpg://{pg.username}:{pg.password}@{pg.host}:{pg.port}/{pg.name}"
         return f"{base}?ssl=require" if pg.ssl_required else base
     else:
-        from app.hackplate.plates.db_plates.sqlite.config import SQLiteSettings
+        from app.platform.plates.db_plates.sqlite.config import SQLiteSettings
 
         lite = SQLiteSettings()
         resolved = str(Path(lite.db_path).resolve())

@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.scripts]
-hackplate = "app.hackplate.cli:app"
+hackplate = "app.platform.cli:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -50,7 +50,7 @@ asyncio_default_fixture_loop_scope = "session"
 [tool.hackplate]
 # The user model used by the auth plate. Must inherit from AbstractUser (SQL plates)
 # or AbstractUserDocument (mongo plate). Change this if you define a custom user model.
-auth_user_model = "app.hackplate.user.models.UserDocument"
+auth_user_model = "app.platform.user.models.UserDocument"
 
 # Set to true to enable MCP boilerplate.
 mcp_server_enabled = false

@@ -28,10 +28,10 @@ Run `hackplate getplates` and `hackplate getmode`, and read `pyproject.toml
 Work through the categories below. For each, decide keep/remove and note *why* not just
 *what*:
 
-1. **Database plates** (`app/hackplate/plates/db_plates/`) — everything except the
+1. **Database plates** (`app/platform/plates/db_plates/`) — everything except the
    selected one. Also flags: `database_plates`/`database_plate_list` in
-   `app/hackplate/config.py`, the `settings_map` entry in `run_checks()`
-   (`app/hackplate/cli/utils.py`), the matching `pyproject.toml` dependency
+   `app/platform/config.py`, the `settings_map` entry in `run_checks()`
+   (`app/platform/cli/utils.py`), the matching `pyproject.toml` dependency
    (`beanie` / `asyncpg`), and confirms the kept plate's `config.py` still passes
    `class_=AsyncSession` explicitly.
 
@@ -42,7 +42,7 @@ Work through the categories below. For each, decide keep/remove and note *why* n
      `versions/` if it exists
    - the `alembic` dependency in `pyproject.toml` (then `uv lock`)
    - the `[tool.hackplate.db] alembic` key and its comment in `pyproject.toml`
-   - the `alembic` field on `DatabaseSettings` in `app/hackplate/toml_settings.py`.
+   - the `alembic` field on `DatabaseSettings` in `app/platform/toml_settings.py`.
      Keep the class itself, because `MongoPlate.__init__` takes it as an argument.
    - Alembic docs: the "Migrations" section and `alembic` commands in
      `modes/CLAUDE.hackplate.md`, plus the Alembic mentions in `README.hackplate.md`
@@ -54,16 +54,16 @@ Work through the categories below. For each, decide keep/remove and note *why* n
    - `register_models.py`: `MongoPlate` imports it to register Beanie documents, and
      `startfeature`/`dropfeature` edit it.
    - `register_auth_model.py`: `register_models.py` imports it.
-   - `register_tools.py`: `app/hackplate/lifespan.py` imports it, and the feature
+   - `register_tools.py`: `app/platform/lifespan.py` imports it, and the feature
      commands edit it.
 
    Don't rename or move `migrations/`; `feature.py` and `lifespan.py` hardcode that
    path.
-2. **Auth plates** (`app/hackplate/plates/auth_plates/`) — same pattern. If Keycloak is
-   being removed, this includes `app/hackplate/cli/keycloak.py`, the `ensure_keycloak()`
-   calls in `app/hackplate/cli/start.py`, the `docker-compose.keycloak.yml` +
+2. **Auth plates** (`app/platform/plates/auth_plates/`) — same pattern. If Keycloak is
+   being removed, this includes `app/platform/cli/keycloak.py`, the `ensure_keycloak()`
+   calls in `app/platform/cli/start.py`, the `docker-compose.keycloak.yml` +
    `settings.json`, and the `KEYCLOAK_*` block plus `keycloak:host-gateway` entries.
-3. **CLI commands** (`app/hackplate/cli/`) — once the configuration is locked in, any
+3. **CLI commands** (`app/platform/cli/`) — once the configuration is locked in, any
    command that exists to switch, scaffold for, or manage a removed plate is dead
    weight. Read every module registered in `cli/cli.py` and decide per command:
    - **`plate.py`** (`getplates`, `setplate`) — remove the module and its `add_typer`
@@ -78,7 +78,7 @@ Work through the categories below. For each, decide keep/remove and note *why* n
      `HACKPLATE_AUTH`/`HACKPLATE_DB` values directly (or drop those keys entirely if the
      config surface step removes them). Remove `_warn_if_docker_missing` unless Keycloak
      is kept. Remove `SECRET_KEY` generation only if nothing outside the removed plates
-     reads it — check `app/hackplate/user/managers.py`, which reads `LocalAuthSettings`
+     reads it — check `app/platform/user/managers.py`, which reads `LocalAuthSettings`
      directly.
    - **`utils.py` `regenkey`** — same rule as `SECRET_KEY` above: keep it while
      anything still reads `SECRET_KEY`.

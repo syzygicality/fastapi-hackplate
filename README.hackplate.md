@@ -6,7 +6,7 @@ A FastAPI metaframework for 24–48 hour hackathons. Clone it, run one command, 
 
 Hackplate separates two concerns:
 
-- **Framework internals** live in `app/hackplate/` and are not meant to be edited.
+- **Framework internals** live in `app/platform/` and are not meant to be edited.
 - **Your code** lives in `app/` alongside the framework — routes, schemas, models, feature slices.
 
 Backend integrations are called **plates**. Active plates are selected via environment variables; switching plates is a one-liner that requires no changes to your route handlers.
@@ -70,7 +70,7 @@ app/
 ├── main.py              ← register routers here
 ├── lifespan.py          ← pre/post startup hooks (user-editable)
 ├── dependencies.py      ← get_db and get_current_user wrappers (user-editable)
-└── hackplate/           ← framework internals — do not modify
+└── platform/            ← framework internals — do not modify
     ├── cli.py
     ├── config.py
     ├── hackplate_types.py
@@ -111,13 +111,13 @@ The active user model is set in `pyproject.toml`:
 
 ```toml
 [tool.hackplate]
-auth_user_model = "app.hackplate.user.models.User"
+auth_user_model = "app.platform.user.models.User"
 ```
 
 - SQL plates: model must inherit from `AbstractUser` (SQLModel)
 - Mongo plate: model must inherit from `AbstractUserDocument` (Beanie Document)
 
-The default `User` lives at `app/hackplate/user/models.py`. To extend it, create your own model class in `app/`, update `auth_user_model`, and register it in `migrations/register_models.py`.
+The default `User` lives at `app/platform/user/models.py`. To extend it, create your own model class in `app/`, update `auth_user_model`, and register it in `migrations/register_models.py`.
 
 ## Configuration
 
@@ -168,7 +168,7 @@ uv run alembic upgrade head
 
 ## WebSockets
 
-`app/hackplate/websocket.py` exports `WSConnectionManager` for broadcasting to all connected clients, and `get_db_from_ws` for injecting a database session into WebSocket handlers.
+`app/platform/websocket.py` exports `WSConnectionManager` for broadcasting to all connected clients, and `get_db_from_ws` for injecting a database session into WebSocket handlers.
 
 ## Stack
 
@@ -188,4 +188,4 @@ Read `CLAUDE.md` (reasoning-friendly, supports `@import`) and `AGENTS.md` (imper
 
 `CLAUDE.md` is yours to edit — it holds nothing but imports: `modes/CLAUDE.hackplate.md` (the framework docs above) and the gitignored `modes/behavior/CLAUDE.mode.md`, which re-exports one of `modes/behavior/CLAUDE.{safe,fast,review}.md`. Switch modes with `hackplate setmode safe|fast|review`; that also copies the matching `modes/settings/settings.<mode>.json` to `.claude/settings.json`. `hackplate init` writes both, defaulting to `safe`.
 
-The single extension pattern: add routes in `app/main.py` via `register_routes()`, inject dependencies from `app/dependencies.py`, and scaffold new slices with `hackplate startfeature`. Don't modify `app/hackplate/` unless extending a plate interface.
+The single extension pattern: add routes in `app/main.py` via `register_routes()`, inject dependencies from `app/dependencies.py`, and scaffold new slices with `hackplate startfeature`. Don't modify `app/platform/` unless extending a plate interface.
